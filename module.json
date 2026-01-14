@@ -3,13 +3,23 @@
   "id": "pushable",
   "title": "Pushable Tokens",
   "description": "Adds tokens that can be pushed around, respecting walls, and that will stop movement if you cannot push anything further.",
-  "version": "1.0.1",
+  "version": "10.0.4",
   "compatibility": {
-    "minimum": "12",
-    "verified": "12"
+    "minimum": "13",
+    "verified": "13"
   },
-  "author": "Azure",
+  "author": "o_Ove",
   "authors": [
+    {
+      "name": "o_Ove",
+      "discord": "Ove#4315",
+      "patreon": "https://www.patreon.com/drO_o"
+    },
+    {
+      "name": "Sum117",
+      "discord": "masoria",
+      "patreon": "https://ko-fi.com/sum117"
+    },
     {
       "name": "Azure",
       "discord": "AzureProject",
@@ -48,9 +58,9 @@
   },
   "socket": true,
   "esmodules": ["./scripts/pushable.mjs"],
-  "url": "https://github.com/LeahAzure/pushable",
-  "download": "https://github.com/LeahAzure/pushable/archive/refs/tags/1.0.1.zip",
-  "manifest": "https://github.com/LeahAzure/pushable/releases/download/1.0.1/module.json",
+  "url": "https://github.com/sum117/pushable",
+  "download": "https://github.com/sum117/pushable/archive/refs/tags/10.0.4.zip",
+  "manifest": "https://github.com/sum117/pushable/releases/download/10.0.4/module.json",
   "license": "LICENSE",
   "readme": "README.md",
   "styles": [],

@@ -70,13 +70,16 @@ function duplicate_tk(token){
   };
 }
 
-function collides_with_wall(token, direction){
-  let cx = token.x + (token.w / 2);
-  let cy = token.y + (token.h / 2);
-  let ray = new Ray(new PIXI.Point(cx, cy), new PIXI.Point(cx + direction.x, cy + direction.y));
-  return canvas.walls.checkCollision(ray, {type:'move', mode:'any'});
-}
+function collides_with_wall(token, direction) {
+  const origin = token.center;
+  const target = new PIXI.Point(origin.x + direction.x, origin.y + direction.y);
 
+  // ClockwiseSweepPolygon implements _testCollision in v13 (PointSourcePolygon is now abstract)
+  return foundry.canvas.geometry.ClockwiseSweepPolygon.testCollision(origin, target, {
+    type: "move",
+    mode: "any"
+  });
+}
 function candidate_move(token, direction, updates, depth){
   let pushlimit = game.settings.get('pushable', 'max_depth');
   if ((depth > pushlimit + 1) && (pushlimit > 0)) { return false; } 
@@ -146,7 +149,7 @@ function checkPull(token, direction, updates){
   let center = { x: token.x + token.w / 2, y: token.y + token.h / 2 };
   let pull_from = { x: center.x - token.w * nv.x, y: center.y - token.h * nv.y };
   let ray = new Ray(new PIXI.Point(pull_from.x, pull_from.y), new PIXI.Point(center.x, center.y));
-  if (canvas.walls.checkCollision(ray, { type:'move', mode:'any' })){
+  if (foundry.canvas.geometry.ClockwiseSweepPolygon.testCollision(new PIXI.Point(pull_from.x, pull_from.y), new PIXI.Point(center.x, center.y), { type: "move", mode: "any" })) {
     return { valid: false, reason: "CantPull" };
   }
 
@@ -194,7 +197,7 @@ Hooks.on('preUpdateToken', (token, change, options, user_id) => {
   if (game.settings.get("pushable", "pull")){
     let pulling = false;
     let pk = game.keybindings.get("pushable", 'pull_key');
-    for (let k of pk){ pulling ||= keyboard.downKeys.has(k.key); }
+    for (let k of pk){ pulling ||= game.keyboard.downKeys.has(k.key); }
     if (pulling){
       let result = checkPull(tok, direction, updates);
       if (!result.valid){ showHint(tok, Lang(result.reason)); }
@@ -278,6 +281,6 @@ Hooks.on("renderTokenConfig", (app, html) => {
   createCheckBox(app, formFields, 'isPushable', Lang('Pushable'), '');
   createCheckBox(app, formFields, 'isPullable', Lang('Pullable'), '');
 
-  html[0].querySelector("div[data-tab='character']").append(formGroup);
+  html.querySelector("footer.form-footer").before(formGroup);
   app.setPosition();
 });
